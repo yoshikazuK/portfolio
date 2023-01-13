@@ -1,9 +1,12 @@
 const App = () => {
+  // 変数宣言
+  let deckShoe = [],
+    playerHand = [];
+
   // 6デッキでプレイ
   const numberOfDeck = 6 * 52;
 
   // 全カードをデッキシューに入れる
-  let deckShoe = [];
   for (let i = 0; i < numberOfDeck; i++) {
     deckShoe.push(i);
   }
@@ -21,8 +24,10 @@ const App = () => {
   // Hit時の処理（デッキシューからハンドへカードを移動）
   const Hit = () => {
     let MoveCard = deckShoe.shift();
-    console.log(deckShoe);
-    console.log(MoveCard);
+    MoveCard = MoveCard % 52;
+    playerHand.push(MoveCard);
+    const SumPlayerHand = playerHand.reduce((sum, num) => sum + ((num % 13) + 1),0);
+    console.log(SumPlayerHand);
   };
 
   return (
