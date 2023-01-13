@@ -1,7 +1,12 @@
+import { useState } from "react";
+
 const App = () => {
   // 変数宣言
   let deckShoe = [],
-    playerHand = [];
+    playerHand = [],
+    PlayerHandSum = 0;
+
+  let [bust, setbust] = useState(false);
 
   // 6デッキでプレイ
   const numberOfDeck = 6 * 52;
@@ -23,17 +28,38 @@ const App = () => {
 
   // Hit時の処理（デッキシューからハンドへカードを移動）
   const Hit = () => {
+    // デッキトップを引く
     let MoveCard = deckShoe.shift();
+
+    // 引いたカードのスートと数字を求める
     MoveCard = MoveCard % 52;
-    playerHand.push(MoveCard);
-    const SumPlayerHand = playerHand.reduce((sum, num) => sum + ((num % 13) + 1),0);
-    console.log(SumPlayerHand);
+
+    let MoveCardsuit = Math.ceil(MoveCard / 4);
+    let MoveCardNum = MoveCard + 1;
+    let ComfirmCard = [MoveCardsuit, MoveCardNum];
+
+    // プレイヤーの手札に加える
+    playerHand.push(ComfirmCard);
+
+    // エースと絵札の計算をする
+    if (ComfirmCard[1] > 10) {
+      ComfirmCard[1] = 10;
+    }
+
+    PlayerHandSum = parseInt(PlayerHandSum) + parseInt(ComfirmCard[1]);
+    console.log(PlayerHandSum);
+
+    // 手札の合計が21を超えたらバスト処理をする
+    if (PlayerHandSum > 21) {
+      alert("BUST!!");
+    }
   };
 
   return (
     <>
       <button onClick={NewGame}>NewGame</button>
       <button onClick={Hit}>HIT</button>
+      {/* {bust ? <p>BUST!!</p> : ""} */}
     </>
   );
 };
