@@ -1,65 +1,74 @@
 import { useState } from "react";
+import Shuffle from "@com/Shuffle";
+import PickCard from "@com/PickCard";
 
 const App = () => {
   // 変数宣言
   let deckShoe = [],
+    comfirmCard = [],
     playerHand = [],
-    PlayerHandSum = 0;
+    playerHandSum = 0;
 
-  let [bust, setbust] = useState(false);
+  const [bust, setbust] = useState(false);
 
   // 6デッキでプレイ
   const numberOfDeck = 6 * 52;
 
   // 全カードをデッキシューに入れる
-  for (let i = 0; i < numberOfDeck; i++) {
+  for (let i = 1; i <= numberOfDeck; i++) {
     deckShoe.push(i);
   }
+  // console.log(deckShoe);
 
-  // デッキシュー内でランダム値を使用してシャッフル
+  // ゲーム開始時にデッキをシャッフル
   const NewGame = () => {
-    for (let i = numberOfDeck; i > 0; i--) {
-      let rdm = Math.floor(Math.random() * i);
-      let def = deckShoe[i];
-      deckShoe[i] = deckShoe[rdm];
-      deckShoe[rdm] = def;
-    }
+    deckShoe = Shuffle(deckShoe);
+    console.log(deckShoe);
+  };
+
+  // 最初にカードを2枚ずつ配る
+  const Distribute = () => {
+    Hit();
+    Hit();
   };
 
   // Hit時の処理（デッキシューからハンドへカードを移動）
   const Hit = () => {
     // デッキトップを引く
-    let MoveCard = deckShoe.shift();
+    // let MoveCard = deckShoe.shift();
 
     // 引いたカードのスートと数字を求める
-    MoveCard = MoveCard % 52;
+    // MoveCard = MoveCard % 52;
 
-    let MoveCardsuit = Math.ceil(MoveCard / 4);
-    let MoveCardNum = MoveCard + 1;
-    let ComfirmCard = [MoveCardsuit, MoveCardNum];
+    // let MoveCardsuit = Math.ceil(MoveCard / 4);
+    // let MoveCardNum = MoveCard + 1;
+    // let ComfirmCard = [MoveCardsuit, MoveCardNum];
+
+    comfirmCard = PickCard(deckShoe);
 
     // プレイヤーの手札に加える
-    playerHand.push(ComfirmCard);
+    playerHand.push(comfirmCard);
 
     // エースと絵札の計算をする
-    if (ComfirmCard[1] > 10) {
-      ComfirmCard[1] = 10;
+    if (comfirmCard[1] > 10) {
+      comfirmCard[1] = 10;
     }
 
-    PlayerHandSum = parseInt(PlayerHandSum) + parseInt(ComfirmCard[1]);
-    console.log(PlayerHandSum);
+    playerHandSum = parseInt(playerHandSum) + parseInt(comfirmCard[1]);
+    console.log(playerHandSum);
 
     // 手札の合計が21を超えたらバスト処理をする
-    if (PlayerHandSum > 21) {
-      alert("BUST!!");
+    if (playerHandSum > 21) {
+      setbust(true);
     }
   };
 
   return (
     <>
       <button onClick={NewGame}>NewGame</button>
+      <button onClick={Distribute}>Distribute</button>
       <button onClick={Hit}>HIT</button>
-      {/* {bust ? <p>BUST!!</p> : ""} */}
+      {bust ? <p>BUST!!</p> : ""}
     </>
   );
 };
