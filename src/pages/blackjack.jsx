@@ -6,8 +6,8 @@ const App = () => {
   // 変数宣言
   let deckShoe = [],
     comfirmCard = [],
-    playerHand = [],
-    playerHandSum = 0;
+    playerHandArray = [],
+    playerHandSum = [];
 
   const [bust, setbust] = useState(false);
 
@@ -32,35 +32,37 @@ const App = () => {
     Hit();
   };
 
-  // Hit時の処理（デッキシューからハンドへカードを移動）
+  // Hit時の処理
   const Hit = () => {
-    // デッキトップを引く
-    // let MoveCard = deckShoe.shift();
-
-    // 引いたカードのスートと数字を求める
-    // MoveCard = MoveCard % 52;
-
-    // let MoveCardsuit = Math.ceil(MoveCard / 4);
-    // let MoveCardNum = MoveCard + 1;
-    // let ComfirmCard = [MoveCardsuit, MoveCardNum];
-
+    // デッキトップをめくる
     comfirmCard = PickCard(deckShoe);
+    // console.log(comfirmCard);
 
     // プレイヤーの手札に加える
-    playerHand.push(comfirmCard);
+    playerHandArray.push(comfirmCard);
 
-    // エースと絵札の計算をする
-    if (comfirmCard[1] > 10) {
-      comfirmCard[1] = 10;
+    // 絵札はすべて10で計算する
+    if (comfirmCard.num > 10) {
+      comfirmCard.num = 10;
     }
 
-    playerHandSum = parseInt(playerHandSum) + parseInt(comfirmCard[1]);
-    console.log(playerHandSum);
+    playerHandSum.push(comfirmCard.num);
+    let total = playerHandSum.reduce((sum, element) => sum + element);
 
-    // 手札の合計が21を超えたらバスト処理をする
-    if (playerHandSum > 21) {
-      setbust(true);
+    // Aを加味して手札の合計が21を超えたらバスト処理をする
+    switch (true) {
+      case total < 11:
+        if (playerHandSum.includes(1)) {
+          total += 10;
+        }
+        break;
+      
+      case total > 21:
+        setbust(true);
+        break;
     }
+
+    console.log(total);
   };
 
   return (
