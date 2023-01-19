@@ -1,16 +1,20 @@
-let handSum = [];
+const Calculation = ([...array]) => {
+  // 手札の最後の1枚を抜き出してチェック
+  let lastCard = array.pop();
 
-const Calculation = (comfirmCard) => {
   // 絵札はすべて10で計算する
-  if (comfirmCard > 10) {
-    comfirmCard = 10;
+  if (lastCard > 10) {
+    lastCard = 10;
   }
 
-  handSum.push(comfirmCard);
-  let total = handSum.reduce((sum, element) => sum + element);
+  // 手札に戻す
+  array.push(lastCard);
+  console.log(`手札一覧：${array}`);
+
+  let total = array.reduce((sum, element) => sum + element);
 
   // Aを11と計算してバストしなければ11とする
-  if (total < 12 && handSum.includes(1)) {
+  if (total < 12 && array.includes(1)) {
     total += 10;
   }
 

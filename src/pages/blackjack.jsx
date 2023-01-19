@@ -7,10 +7,16 @@ import Calculation from "@com/Calculation";
 const App = () => {
   // 変数宣言
   let deckShoe = [],
-    comfirmCard = [],
-    playerHandArray = [];
+    playerHandArray = [],
+    playerHandSum = [],
+    dealerHandArray = [],
+    dealerHandSum = [];
 
-  const [bust, setbust] = useState(false);
+  const [playerBust, setPlayerBust] = useState(false);
+  const [dealerBust, setDealerBust] = useState(false);
+  const [playerHandTotal, setPlayerHandTotal] = useState(0);
+  const [dealerHandTotal, setDealerHandTotal] = useState(0);
+  const [active, isActive] = useState(true);
 
   // 6デッキでプレイ
   const numberOfDeck = 6 * 52;
@@ -29,25 +35,63 @@ const App = () => {
 
   // 最初にカードを2枚ずつ配る
   const Distribute = () => {
-    Hit();
-    Hit();
+    setPlayerHandTotal(0);
+    setDealerHandTotal(0);
+    playerHit();
+    dealerHit();
+    playerHit();
+    dealerHit();
   };
 
   // Hit時の処理
-  const Hit = () => {
+  const playerHit = () => {
     // デッキトップをめくる
-    comfirmCard = PickCard(deckShoe);
+    const comfirmCard = PickCard(deckShoe);
 
     // プレイヤーの手札に加える
+    // 表示用のスート情報入り
     playerHandArray.push(comfirmCard);
 
-    // 手札の合計値を計算する
-    let total = Calculation(comfirmCard.num);
+    // 計算用の数字情報のみ
+    playerHandSum.push(comfirmCard.num);
 
-    console.log(total);
+    // 配列ごと関数に渡して手札の合計値を計算してStateを更新する
+    setPlayerHandTotal(Calculation(playerHandSum));
+
     // バスト判定をする
-    if (total > 21) {
-      setbust(true);
+    if (playerHandTotal > 21) {
+      setPlayerBust(true);
+    }
+  };
+
+  // Stay時の処理
+  const Stay = () => {
+    isActive(false);
+  };
+
+  // ディーラーの処理
+  // if (!isActive) {
+  //   for(total)
+  // }
+
+  const dealerHit = () => {
+    // デッキトップをめくる
+    const comfirmCard = PickCard(deckShoe);
+    // console.log(comfirmCard);
+
+    // ディーラーの手札に加える
+    // 表示用のスート情報入り
+    dealerHandArray.push(comfirmCard);
+
+    // 計算用の数字情報のみ
+    dealerHandSum.push(comfirmCard.num);
+
+    // 配列ごと関数に渡して手札の合計値を計算してStateを更新する
+    setDealerHandTotal(Calculation(dealerHandSum));
+
+    // バスト判定をする
+    if (dealerHandTotal > 21) {
+      setDealerBust(true);
     }
   };
 
@@ -55,8 +99,12 @@ const App = () => {
     <>
       <button onClick={DeckShuffle}>デッキをシャッフル</button>
       <button onClick={Distribute}>カードを配る</button>
-      <button onClick={Hit}>HIT</button>
-      {bust ? <p>BUST!!</p> : ""}
+      <button onClick={playerHit}>HIT</button>
+      <button onClick={Stay}>STAY</button>
+      <p>プレイヤーハンド：{playerHandTotal}</p>
+      {playerBust ? <p>BUST!!</p> : ""}
+      <p>ディーラーハンド：{dealerHandTotal}</p>
+      {dealerBust ? <p>BUST!!</p> : ""}
     </>
   );
 };
