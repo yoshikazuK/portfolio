@@ -1,13 +1,14 @@
 import { useState } from "react";
+
 import Shuffle from "@com/Shuffle";
 import PickCard from "@com/PickCard";
+import Calculation from "@com/Calculation";
 
 const App = () => {
   // 変数宣言
   let deckShoe = [],
     comfirmCard = [],
-    playerHandArray = [],
-    playerHandSum = [];
+    playerHandArray = [];
 
   const [bust, setbust] = useState(false);
 
@@ -21,9 +22,9 @@ const App = () => {
   // console.log(deckShoe);
 
   // ゲーム開始時にデッキをシャッフル
-  const NewGame = () => {
+  const DeckShuffle = () => {
     deckShoe = Shuffle(deckShoe);
-    console.log(deckShoe);
+    // console.log(deckShoe);
   };
 
   // 最初にカードを2枚ずつ配る
@@ -36,39 +37,24 @@ const App = () => {
   const Hit = () => {
     // デッキトップをめくる
     comfirmCard = PickCard(deckShoe);
-    // console.log(comfirmCard);
 
     // プレイヤーの手札に加える
     playerHandArray.push(comfirmCard);
 
-    // 絵札はすべて10で計算する
-    if (comfirmCard.num > 10) {
-      comfirmCard.num = 10;
-    }
-
-    playerHandSum.push(comfirmCard.num);
-    let total = playerHandSum.reduce((sum, element) => sum + element);
-
-    // Aを加味して手札の合計が21を超えたらバスト処理をする
-    switch (true) {
-      case total < 11:
-        if (playerHandSum.includes(1)) {
-          total += 10;
-        }
-        break;
-      
-      case total > 21:
-        setbust(true);
-        break;
-    }
+    // 手札の合計値を計算する
+    let total = Calculation(comfirmCard.num);
 
     console.log(total);
+    // バスト判定をする
+    if (total > 21) {
+      setbust(true);
+    }
   };
 
   return (
     <>
-      <button onClick={NewGame}>NewGame</button>
-      <button onClick={Distribute}>Distribute</button>
+      <button onClick={DeckShuffle}>デッキをシャッフル</button>
+      <button onClick={Distribute}>カードを配る</button>
       <button onClick={Hit}>HIT</button>
       {bust ? <p>BUST!!</p> : ""}
     </>
