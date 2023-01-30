@@ -1,0 +1,29 @@
+.h1 {
+  margin-bottom: 1rem;
+  font-size: 3rem;
+  text-align: center;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+}
+.work {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.li {
+  width: clamp(320px, 100%, 480px);
+  padding: 1rem;
+  margin-bottom: 8rem;
+  box-shadow: 1px 1px 8px 0 gainsboro;
+  list-style: none;
+
+  h2 {
+    width: fit-content;
+    padding: 0.125rem 0;
+    margin: 1.5rem 1rem 0.5rem;
+    border-top: solid 1px gray;
+    border-bottom: solid 1px gray;
+  }
+  h3 {
+    margin: 1rem 0 0 1rem;
+  }
+}

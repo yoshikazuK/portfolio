@@ -1,13 +1,16 @@
 import Link from "next/link";
+import Header from "@com/Header";
+import Work from "@com/Work";
+import Practice from "@com/Practice";
 
 const App = () => {
   return (
     <>
-      <Link href={`./blackjack`}>
-        BlackJack
-      </Link>
+      <Header />
+      <Work />
+      <Practice />
     </>
-  )
-}
+  );
+};
 
 export default App;
